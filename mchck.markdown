@@ -16,7 +16,7 @@ https://github.com/mchck/mchck/wiki/Getting-Started
     $ git checkout temp-gather
     $ cd examples
     $ git clone https://github.com/bgamari/data-logger
-    $ cd water-quality
+    $ cd data-logger 
     $ make
 
 press reset
@@ -39,7 +39,7 @@ $ export LD_LIBRARY_PATH=~/sat/lib:$LD_LIBRARY_PATH
 need to install picocom for datalogger
 sudo apt-get install picocom
 
-By the way the command line interface is looking pretty good,
+Using the command line interface:
 
     [plug in fresh mchck]
     $ cd mchck/examples/data-logger
@@ -91,9 +91,3 @@ Wait a bit,
     1388637166     1         23.3620
     1388637166     3         306.7070
     1388637166     2         307.5180
-
-Do you see any missing functionality?
-
-Cheers,
-
-- Ben
