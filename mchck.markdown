@@ -13,7 +13,6 @@ https://github.com/mchck/mchck/wiki/Getting-Started
 
     $ git clone https://github.com/bgamari/mchck
     $ cd mchck
-    $ git checkout temp-gather
     $ cd examples
     $ git clone https://github.com/bgamari/data-logger
     $ cd data-logger 
