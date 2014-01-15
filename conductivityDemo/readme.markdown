@@ -1,5 +1,4 @@
-First plug in receive side
-Then plug in data-logger
+First plug in receive side; then plug in data-logger.
 
 To start logging,
 
