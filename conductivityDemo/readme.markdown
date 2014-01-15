@@ -3,7 +3,7 @@ Then plug in data-logger
 
 To start logging,
 
-    $ picocom -b 115200 --imap lfcrlf --omap crlf --echo /dev/ttyACM1
+    ./console.sh
     v=1
     r=1
     T=2
