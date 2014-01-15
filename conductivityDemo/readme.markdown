@@ -14,7 +14,7 @@ To start plotting
 
     python monitor.py /dev/ttyACM0 | cplot -x 0 -y 3
 
-Reference values
+Reference values (from [engineering toolbox](http://www.engineeringtoolbox.com/water-salinity-d_1251.html)
 
 - Saline in Water
 - fresh water (typical city water in United States) : < 100 ppm
