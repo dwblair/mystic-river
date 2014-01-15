@@ -6,7 +6,7 @@ To start logging,
     $ picocom -b 115200 --imap lfcrlf --omap crlf --echo /dev/ttyACM1
     v=1
     r=1
-    T=5
+    T=2
     t=5
     a=5
 
