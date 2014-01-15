@@ -1,0 +1,135 @@
+#!/usr/bin/python
+
+import sys
+import threading
+from time import sleep
+from argparse import ArgumentParser
+from collections import namedtuple
+
+import gobject
+import gtk
+gtk.gdk.threads_init()
+
+from matplotlib.figure import Figure
+#from matplotlib.backends.backend_gtk import FigureCanvasGTK as FigureCanvas
+from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
+#from matplotlib.backends.backend_gtkcairo import FigureCanvasGTKCairo as FigureCanvas
+from matplotlib.backends.backend_gtkagg import NavigationToolbar2GTKAgg as NavigationToolbar
+
+parser = ArgumentParser()
+parser.add_argument("-x", "--x-col", type=int,
+                    help="Column to use for X axis", metavar="COLUMN")
+parser.add_argument("-y", "--y-col", action='append', type=int, default=[],
+                    help="Column to use for Y axis", metavar="COLUMN")
+parser.add_argument("-n", '--n-points', type=int,
+                    help='Number of points to plot at once', metavar="COUNT")
+parser.add_argument("-t", '--title', type=str,
+                    help='Window title', metavar="STRING", default='Plot')
+parser.add_argument('-l', '--legend', action='store_true',
+                    help='Show legend')
+parser.add_argument('-L', '--lines', action='store_true',
+                    help='Plot points with lines')
+parser.add_argument('--logx', action='store_true',
+                    help='Logarithmic X axis')
+parser.add_argument('--logy', action='store_true',
+                    help='Logarithmic Y axis')
+parser.add_argument('--xlabel', type=str,
+                    help='X axis label')
+parser.add_argument('--ylabel', type=str,
+                    help='Y axis label')
+opts = parser.parse_args()
+
+opts.lines = True # FIXME non-lines broken
+
+x_col = opts.x_col
+y_cols = opts.y_col if len(opts.y_col) > 0 else [1]
+
+# Create window and matplotlib thingies
+win = gtk.Window()
+def hi(o):
+        gtk.main_quit()
+win.connect("destroy", hi)
+
+win.set_default_size(600, 400)
+win.set_title(opts.title)
+vbox = gtk.VBox()
+win.add(vbox)
+fig = Figure()
+canvas = FigureCanvas(fig)
+vbox.pack_start(canvas)
+toolbar = NavigationToolbar(canvas, win)
+vbox.pack_start(toolbar, False, False)
+
+# Create series
+Series = namedtuple('Series', 'artist col ys')
+series_lock = threading.Lock()
+xs = []
+i = 0
+ax = fig.add_subplot(111)
+series = []
+for col in y_cols:
+        col = int(col)
+        label = "Column %d" % col
+        s = None
+        if opts.lines:
+                s, = ax.plot([], [], label=label)
+        else:
+                s = ax.scatter([], [], label=label)
+        series.append(Series(s, col, []))
+if opts.legend: ax.legend()
+if opts.logx: ax.set_xscale('log')
+if opts.logy: ax.set_yscale('log')
+
+# Update loop things
+needs_update = False
+def update():
+        global needs_update
+        series_lock.acquire()
+        for s in series:
+                s.artist.set_data(xs, s.ys)
+        series_lock.release()
+        ax.relim()
+        ax.autoscale_view()
+        fig.canvas.draw_idle()
+        needs_update = False
+
+def add_point(_list, pt):
+        _list.append(pt)
+        if opts.n_points and len(_list) > opts.n_points:
+                del _list[:-opts.n_points]
+                
+def reader_thread():
+        global i, needs_update
+        while True:
+                l = sys.stdin.readline()
+                if l == '':
+                        sleep(1)
+                        continue
+                if l[0] == '#':
+                        continue
+                cols = l.split()
+                if any(col >= len(cols) for col in [x_col]+y_cols):
+                        print 'not enough columns'
+                        continue
+                x = float(cols[x_col] if x_col >= 0 else i)
+                series_lock.acquire()
+                add_point(xs, x)
+                
+                for s in series:
+                        if s.col >= len(cols): continue
+                        y = float(cols[s.col])
+                        add_point(s.ys, y)
+
+                series_lock.release()
+                if not needs_update:
+                        gobject.idle_add(update)
+                        needs_update = True
+                i += 1
+
+thrd = threading.Thread(target=reader_thread)
+thrd.daemon = True
+thrd.start()
+
+win.show_all()
+gtk.main()
+
