@@ -13,3 +13,17 @@ To start logging,
 To start plotting
 
     python monitor.py /dev/ttyACM0 | cplot -x 0 -y 3
+
+Reference values
+
+    Saline in Water
+    fresh water (typical city water in United States) : < 100 ppm
+    water supply typicaly restricted to : 500 ppm
+    fresh water - official salt concentration limits in drinking water US: 1000 ppm
+    typical limit agriculture irrigation : 2000 ppm
+    brackish water, mildly : 1000 - 5,000 ppm
+    brackish water, moderately : 5000 - 15,000 ppm
+    brackish water, heavily : 15,000 - 35,000 ppm
+    sea water : 30,000 - 50,000 ppm (approx. 35,000)
+    brine > 50.000 ppm
+    Dead sea : 330.000 ppm
