@@ -1,0 +1,26 @@
+* places
+** kenya
+** new orleans
+** rwanda
+** trinidad and tobago
+** dominican republic
+** cameroon
+**  new hampshire
+- dorn cox
+- mark green
+** amherst
+- rushing rivers project, STEM
+* people
+- mark g
+- dorn cox
+
+* projects
+** bacteria levels
+** conductivity
+** data standards
+** basic data logger
+** wireless data logging
+** online viz
+** citizen science / engagement
+** STEAM
+ 

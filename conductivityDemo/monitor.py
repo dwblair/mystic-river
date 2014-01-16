@@ -12,6 +12,7 @@ def parse_sample(a):
     return Sample(t, nid, sid, 1.0 * value / 0x10000 * 2)
 
 s = Serial(sys.argv[1])
+s.flush()
 while True:
     while s.read(1) != "\x06": pass
     a = s.read(12)

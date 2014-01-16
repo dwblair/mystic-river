@@ -72,13 +72,16 @@ for col in y_cols:
         label = "Column %d" % col
         s = None
         if opts.lines:
-                s, = ax.plot([], [], label=label)
+                s, = ax.plot([], [],  '-o', label=label)
         else:
                 s = ax.scatter([], [], label=label)
         series.append(Series(s, col, []))
 if opts.legend: ax.legend()
 if opts.logx: ax.set_xscale('log')
 if opts.logy: ax.set_yscale('log')
+
+# hard code limits on y axis
+ax.set_ylim(0,8)
 
 # Update loop things
 needs_update = False
